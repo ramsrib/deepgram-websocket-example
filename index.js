@@ -14,7 +14,7 @@ function createExtraLoggingWebSocket(url, protocols, options) {
   const ws = new WebSocket(url, protocols, options);
 
   ws.on('error', function (error) {
-    console.log('Error received.', error);
+    console.log('WS: Error received.', error);
   });
 
   ws.on('unexpected-response', (request, response) => {
@@ -23,7 +23,7 @@ function createExtraLoggingWebSocket(url, protocols, options) {
       response?.headers?.['dg-request-id'] ||
       response?.headers?.['Dg-Request-Id'] ||
       'not found';
-    console.log('Unexpected response received.', statusCode, dgRequestId);
+    console.log('WS: Unexpected response received.', statusCode, dgRequestId);
   });
 
   ws.on('upgrade', function (response) {
@@ -32,15 +32,15 @@ function createExtraLoggingWebSocket(url, protocols, options) {
       response?.headers?.['dg-request-id'] ||
       response?.headers?.['Dg-Request-Id'] ||
       'not found';
-    console.log('Upgrade received.', statusCode, dgRequestId);
+    console.log('WS: Upgrade received.', statusCode, dgRequestId);
   });
 
   ws.on('open', function () {
-    console.log('Connection opened.');
+    console.log('WS: Connection opened.');
   });
 
   ws.on('close', function (code, reason) {
-    console.log('Connection closed.', code, reason?.toString() || 'No reason provided');
+    console.log('WS: Connection closed.', code, reason?.toString() || 'No reason provided');
   });
 
   return ws;
@@ -63,26 +63,29 @@ const live = async () => {
   });
 
   dgConnection.on(LiveTranscriptionEvents.Open, () => {
+    console.log("Deepgram SDK: Connection opened.");
+
     dgConnection.on(LiveTranscriptionEvents.Close, () => {
-      console.log('Connection closed.');
+      console.log('Deepgram SDK: Connection closed.');
     });
 
     dgConnection.on(LiveTranscriptionEvents.Transcript, (data) => {
-      console.log("Transcript: ", data.channel.alternatives[0].transcript);
+      console.log("Deepgram SDK: Transcript: ", data.channel.alternatives[0].transcript);
     });
 
     dgConnection.on(LiveTranscriptionEvents.Metadata, (data) => {
-      console.log("Metadata: ",  data);
+      console.log("Deepgram SDK: Metadata: ",  data);
     });
 
     dgConnection.on(LiveTranscriptionEvents.Error, (err) => {
-      console.error("Error: ", err);
+      console.error("Deepgram SDK: Error: ", err);
     });
 
     fetch(STREAMING_URL)
       .then((r) => r.body)
       .then((res) => {
         res.on('readable', () => {
+          // console.log("Sending data to Deepgram SDK");
           dgConnection.send(res.read());
         });
       });
