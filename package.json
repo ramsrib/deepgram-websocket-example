@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "dev:native": "node --watch index-native.js",
-    "dev:ws": "node --watch index-ws.js"
+    "dev:native": "node --watch index-native.js"
   },
   "keywords": [],
   "author": "",

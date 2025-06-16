@@ -7,6 +7,7 @@ const STREAMING_URL = 'http://stream.live.vc.bbcmedia.co.uk/bbc_world_service';
 
 const DEEPGRAM_API_URL = 'https://api.deepgram.com';
 
+// use the native WebSocket which doesn't expose http request/response details
 const live = async () => {
   const dgClient = createClient(process.env.DEEPGRAM_API_KEY, {
     global: { url: DEEPGRAM_API_URL },
