@@ -62,6 +62,10 @@ const live = async () => {
     smart_format: true,
   });
 
+  // manually call setupConnection to wire the events since sdk doesn't do it automatically
+  console.log("Deepgram SDK: Setting up connection.");
+  dgConnection?.setupConnection();
+
   dgConnection.on(LiveTranscriptionEvents.Open, () => {
     console.log("Deepgram SDK: Connection opened.");
 
